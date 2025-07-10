@@ -1,0 +1,11 @@
+{
+  "name": "redis-api-heroku",
+  "main": "server.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ioredis": "^5.3.1"
+  }
+}
