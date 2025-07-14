@@ -7,9 +7,9 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 const redis = new Redis({
-  host: 'your-redis-host',
-  port: 12345,
-  password: 'your-password',
+  host: 'redis-15851.c15.us-east-1-2.ec2.redns.redis-cloud.com',
+  port: 15851,
+  password: 'eQT43h6keaosjNWneVeklN8NrfU9SQ4B',
   tls: {}
 });
 
