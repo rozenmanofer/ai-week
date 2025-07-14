@@ -8,6 +8,7 @@ app.use(express.json());
 
 const redis = new Redis({
   host: 'redis-15851.c15.us-east-1-2.ec2.redns.redis-cloud.com',
+  username: 'default',
   port: 15851,
   password: 'eQT43h6keaosjNWneVeklN8NrfU9SQ4B',
   tls: {}
