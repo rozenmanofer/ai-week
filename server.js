@@ -1,5 +1,5 @@
-import express from 'express';
-import Redis from 'ioredis';
+const express = require('express');
+const Redis = require('ioredis');
 
 const app = express();
 const port = process.env.PORT || 3000;
