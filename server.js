@@ -1,8 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const Redis = require('ioredis');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Allow any origin (for now)
+app.use(cors());
 
 app.use(express.json());
 
