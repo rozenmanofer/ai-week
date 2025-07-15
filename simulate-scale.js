@@ -14,11 +14,19 @@ module.exports = (redis) => {
     const batchSize = 50;
 
     try {
+      console.log(`[Simulate Scale] Starting simulation for prefix "${prefix}" with ${keys.length} keys`);
+
       for (let i = 0; i < keys.length; i += batchSize) {
         const batch = keys.slice(i, i + batchSize);
-        await Promise.all(batch.map((key) => redis.get(key)));
+        console.log(`[Simulate Scale] Processing batch ${i / batchSize + 1}:`, batch);
+
+        await Promise.all(batch.map((key) => {
+          console.log(`[Simulate Scale] GET ${key}`);
+          return redis.get(key);
+        }));
       }
 
+      console.log(`[Simulate Scale] Completed simulation for prefix "${prefix}"`);
       res.status(200).json({ success: true, message: 'Simulated 1000 reads in batches' });
     } catch (error) {
       console.error('Error during scale simulation:', error);
