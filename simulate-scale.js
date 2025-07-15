@@ -10,7 +10,7 @@ module.exports = (redis) => {
       return res.status(400).json({ error: 'Missing or invalid prefix' });
     }
 
-    const totalKeys = 5000;
+    const totalKeys = 10000;
     const batchSize = 50;
     const keys = Array.from({ length: totalKeys }, (_, i) => `session:${prefix}_loadtest_${i}`);
 
