@@ -1,7 +1,6 @@
-// simulate-scale.js
 const express = require('express');
 const router = express.Router();
-const redis = require('./redis'); // import your Redis client instance
+const redis = require('./redis'); // Your Redis client
 
 router.post('/simulate-scale', async (req, res) => {
   const { prefix } = req.body;
@@ -11,14 +10,17 @@ router.post('/simulate-scale', async (req, res) => {
   }
 
   const keys = Array.from({ length: 1000 }, (_, i) => `session:${prefix}_loadtest_${i}`);
+  const batchSize = 50;
 
   try {
-    await Promise.all(
-      keys.map((key) => redis.get(key))
-    );
-    res.status(200).json({ success: true, message: 'Simulated 1000 reads' });
+    for (let i = 0; i < keys.length; i += batchSize) {
+      const batch = keys.slice(i, i + batchSize);
+      await Promise.all(batch.map((key) => redis.get(key)));
+    }
+
+    res.status(200).json({ success: true, message: 'Simulated 1000 reads in batches' });
   } catch (error) {
-    console.error('Error during simulated scale:', error);
+    console.error('Error during scale simulation:', error);
     res.status(500).json({ error: 'Redis simulation failed' });
   }
 });
