@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const Redis = require('ioredis');
-const simulateScale = require('./simulate-scale');
-
+const simulateScale = require('./simulate-scale')(redis);
 const app = express();
 const port = process.env.PORT || 3000;
 
