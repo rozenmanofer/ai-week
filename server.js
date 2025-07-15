@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const Redis = require('ioredis');
+const simulateScale = require('./simulate-scale');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 app.use(express.json());
+app.use('/', simulateScale);
 
 const redis = new Redis({
   host: 'redis-15851.c15.us-east-1-2.ec2.redns.redis-cloud.com',
