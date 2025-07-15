@@ -10,7 +10,7 @@ module.exports = (redis) => {
       return res.status(400).json({ error: 'Missing or invalid prefix' });
     }
 
-    const keys = Array.from({ length: 100 }, (_, i) => `session:${prefix}_loadtest_${i}`);
+    const keys = Array.from({ length: 1000 }, (_, i) => `session:${prefix}_loadtest_${i}`);
     const batchSize = 50;
 
     try {
@@ -19,7 +19,7 @@ module.exports = (redis) => {
         await Promise.all(batch.map((key) => redis.get(key)));
       }
 
-      res.status(200).json({ success: true, message: 'Simulated 100 reads in batches' });
+      res.status(200).json({ success: true, message: 'Simulated 1000 reads in batches' });
     } catch (error) {
       console.error('Error during scale simulation:', error);
       res.status(500).json({ error: 'Redis simulation failed' });
