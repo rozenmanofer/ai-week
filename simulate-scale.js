@@ -10,7 +10,7 @@ module.exports = (redis) => {
       return res.status(400).json({ error: 'Missing or invalid prefix' });
     }
 
-    const safeCount = Math.max(1, Math.min(Number(count) || 1, 10000)); // limit to 10,000 max
+    const safeCount = Math.max(1, Math.min(Number(count) || 1, 100000)); // limit to 100,000 max
     const keys = Array.from({ length: safeCount }, (_, i) => `session:${prefix}_loadtest_${i}`);
     const batchSize = 50;
 
