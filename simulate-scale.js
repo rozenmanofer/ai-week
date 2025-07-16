@@ -11,6 +11,15 @@ module.exports = (redis) => {
     }
 
     const safeCount = Math.max(1, Math.min(Number(count) || 1, 100000)); // limit to 100,000 max
+    if (safeCount === 1) {
+        return res.status(200).json({
+          success: true,
+        message: 'Simulated single login, no load test applied',
+        getLatencyMs: 0,
+        setLatencyMs: write?0:undefined
+    });
+  }
+    
     const keys = Array.from({ length: safeCount }, (_, i) => `session:${prefix}_loadtest_${i}`);
     const batchSize = 50;
 
