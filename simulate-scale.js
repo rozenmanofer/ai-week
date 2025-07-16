@@ -40,7 +40,8 @@ module.exports = (redis) => {
 
       const endTime = Date.now();
       const durationMs = endTime - startTime;
-
+      
+      console.log(`[Simulate Scale] Completed ${safeCount} GETs${write ? ' + SETs' : ''} in ${durationMs}ms`);
       res.status(200).json({
         success: true,
         message: `Simulated ${safeCount} reads${write ? ' and writes' : ''}`,
