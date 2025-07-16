@@ -58,4 +58,17 @@ app.get('/keys', async (req, res) => {
   }
 });
 
+app.post('/clear', async (req, res) => {
+  try {
+    const keys = await redis.keys('*');
+    if (keys.length > 0) {
+      await redis.del(...keys);
+    }
+    res.json({ status: 'cleared', count: keys.length });
+  } catch (e) {
+    console.error('Error clearing Redis:', e);
+    res.status(500).json({ error: 'Failed to clear Redis' });
+  }
+});
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
