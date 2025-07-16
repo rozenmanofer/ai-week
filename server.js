@@ -22,8 +22,10 @@ app.use('/', simulateScale);
 
 app.post('/set', async (req, res) => {
   const { key, value, ttl } = req.body;
+  const safeTTL = Math.max(3, Math.min(Number(ttl) || 10, 86400)); 
+  
   try {
-    await redis.set(key, value, 'EX', ttl);
+    await redis.set(key, value, 'EX', safeTTL);
     res.json({ status: 'ok' });
   } catch (e) {
     res.status(500).json({ error: e.message });
