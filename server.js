@@ -23,7 +23,7 @@ app.use('/', simulateScale);
 app.post('/set', async (req, res) => {
   const { key, value } = req.body;
   try {
-    await redis.set(key, value);
+    await redis.set(key, value, 'EX', 600);
     res.json({ status: 'ok' });
   } catch (e) {
     res.status(500).json({ error: e.message });
