@@ -4,12 +4,12 @@ module.exports = (redis) => {
   const router = express.Router();
 
   router.post('/simulate-scale', async (req, res) => {
-const { prefix, count, write, ttl } = req.body;
+  const { prefix, count, write, ttl } = req.body;
     
     if (!prefix || typeof prefix !== 'string') {
       return res.status(400).json({ error: 'Missing or invalid prefix' });
     }
-    const safeTTL = Math.max(3, Math.min(Number(ttl) || 600, 86400)); // default 600s (10 min)
+    const safeTTL = Math.max(3, Math.min(Number(ttl) || 10, 86400)); 
     
     const safeCount = Math.max(1, Math.min(Number(count) || 1, 100000)); // limit to 100,000 max
     if (safeCount === 1) {
