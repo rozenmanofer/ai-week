@@ -44,7 +44,7 @@ module.exports = (redis) => {
       res.status(200).json({
         success: true,
         message: `Simulated ${safeCount} reads${write ? ' and writes' : ''}`,
-        durationMs
+        latencyMs
       });
     } catch (error) {
       console.error('Error during scale simulation:', error);
