@@ -37,7 +37,8 @@ module.exports = (redis) => {
           email: `${prefix}_loadtest_${i}@test.com`,
           roles: ['user'],
           created_at: new Date().toISOString()
-        }))
+        }),
+        'EX', 600)
       ));
     }
     const endSet = Date.now();
