@@ -39,4 +39,23 @@ app.get('/get', async (req, res) => {
   }
 });
 
+app.get('/keys', async (req, res) => {
+  try {
+    const keys = await redis.keys('session:*');
+    const results = await Promise.all(
+      keys.map(async (key) => {
+        const [value, ttl] = await Promise.all([
+          redis.get(key),
+          redis.ttl(key),
+        ]);
+        return { key, value, ttl };
+      })
+    );
+    res.json(results);
+  } catch (err) {
+    console.error('Error fetching Redis keys:', err);
+    res.status(500).json({ error: 'Failed to fetch Redis keys' });
+  }
+});
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
