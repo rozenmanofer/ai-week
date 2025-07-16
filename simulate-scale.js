@@ -4,12 +4,13 @@ module.exports = (redis) => {
   const router = express.Router();
 
   router.post('/simulate-scale', async (req, res) => {
-    const { prefix, count, write } = req.body;
-
+const { prefix, count, write, ttl } = req.body;
+    
     if (!prefix || typeof prefix !== 'string') {
       return res.status(400).json({ error: 'Missing or invalid prefix' });
     }
-
+    const safeTTL = Math.max(3, Math.min(Number(ttl) || 600, 86400)); // default 600s (10 min)
+    
     const safeCount = Math.max(1, Math.min(Number(count) || 1, 100000)); // limit to 100,000 max
     if (safeCount === 1) {
         return res.status(200).json({
@@ -37,22 +38,21 @@ module.exports = (redis) => {
 
   // Measure SETs if needed
   if (write) {
-    const startSet = Date.now();
-    for (let i = 0; i < keys.length; i += batchSize) {
-      const batch = keys.slice(i, i + batchSize);
-      await Promise.all(batch.map((key) =>
-        redis.set(key, JSON.stringify({
-          user_id: `fake-${i}`,
-          email: `${prefix}_loadtest_${i}@test.com`,
-          roles: ['user'],
-          created_at: new Date().toISOString()
-        }),
-        'EX', 600)
-      ));
-    }
-    const endSet = Date.now();
-    setLatencyMs = endSet - startSet;
+  const startSet = Date.now();
+  for (let i = 0; i < keys.length; i += batchSize) {
+    const batch = keys.slice(i, i + batchSize);
+    await Promise.all(batch.map((key) =>
+      redis.set(key, JSON.stringify({
+        user_id: `fake-${i}`,
+        email: `${prefix}_loadtest_${i}@test.com`,
+        roles: ['user'],
+        created_at: new Date().toISOString()
+      }),
+      'EX', safeTTL)
+    ));
   }
+  const endSet = Date.now();
+  setLatencyMs = endSet - startSet;
 
   console.log(`[Simulate Scale] Completed ${safeCount} GETs in ${getLatencyMs}ms${write ? ` + ${safeCount} SETs in ${setLatencyMs}ms` : ''}`);
 
